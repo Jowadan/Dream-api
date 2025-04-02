@@ -26,7 +26,7 @@ app.post('/interpretar', async (req, res) => {
     if (!texto) return res.status(400).json({ error: 'Texto do sonho é obrigatório' });
 
     try {
-        const dream = await Dream.findOne({ keyword: texto.toLowerCase() });
+        const dream = await Dream.find({ keyword: texto.toLowerCase() });
         if (!dream) return res.status(404).json({ message: 'Nenhuma interpretação encontrada' });
         res.json({ significado: dream.meaning });
     } catch (err) {
