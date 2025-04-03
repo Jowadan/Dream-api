@@ -32,11 +32,13 @@ app.post('/interpretar', async (req, res) => {
             return res.status(404).json({ message: 'Nenhuma interpretação encontrada' });
         }
 
+        // Retorna todos os significados encontrados
         res.json({ significados: dreams.map(dream => dream.meaning) });
     } catch (err) {
         res.status(500).json({ error: err.message });
     }
 });
+
 
 // Endpoint para adicionar significados
 app.post('/significados', async (req, res) => {
