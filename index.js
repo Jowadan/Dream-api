@@ -26,9 +26,13 @@ app.post('/interpretar', async (req, res) => {
     if (!texto) return res.status(400).json({ error: 'Texto do sonho é obrigatório' });
 
     try {
-        const dream = await Dream.find({ keyword: texto.trim().toLowerCase() });
-        if (!dream) return res.status(404).json({ message: 'Nenhuma interpretação encontrada' });
-        res.json({ significado: dream.meaning });
+        const dreams = await Dream.find({ keyword: texto.trim().toLowerCase() });
+
+        if (dreams.length === 0) {
+            return res.status(404).json({ message: 'Nenhuma interpretação encontrada' });
+        }
+
+        res.json({ significados: dreams.map(dream => dream.meaning) });
     } catch (err) {
         res.status(500).json({ error: err.message });
     }
@@ -40,7 +44,7 @@ app.post('/significados', async (req, res) => {
     if (!keyword || !meaning) return res.status(400).json({ error: 'Palavra-chave e significado são obrigatórios' });
 
     try {
-        const newDream = new Dream({ keyword: keyword.toLowerCase(), meaning });
+        const newDream = new Dream({ keyword: keyword.trim().toLowerCase(), meaning });
         await newDream.save();
         res.json(newDream);
     } catch (err) {
